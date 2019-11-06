@@ -1,16 +1,6 @@
 #include "buffer_map.h"
 #include <iostream>
 
-void printBuffer(std::string title, const Napi::Buffer<byte>& buffer) {
-    auto length = buffer.Length();
-    auto data = buffer.Data();
-
-    std::cout << title << std::endl;
-    for (size_t i = 0; i < length; i++) {
-        std::cout << i << ": " << static_cast<int>(data[i]) << std::endl;
-    }
-}
-
 Napi::FunctionReference BufferMap::constructor;
 
 Napi::Object BufferMap::Init(Napi::Env env, Napi::Object exports) {
@@ -36,22 +26,21 @@ BufferMap::BufferMap(const Napi::CallbackInfo& info) : Napi::ObjectWrap<BufferMa
 
 Napi::Value BufferMap::Get(const Napi::CallbackInfo& info) {
     Napi::Buffer<byte> key = info[0].As<Napi::Buffer<byte>>();
-    auto iterator = items.find(key);
 
-    if (iterator == items.end()) {
+    auto iterator = map.find(key);
+
+    if (iterator == map.end()) {
        return info.Env().Undefined();
     }
 
-    std::cout << iterator->second << std::endl;
-
-    return Napi::Value(info.Env(), iterator->second);
+    return iterator->second.Value();
 }
 
 Napi::Value BufferMap::Set(const Napi::CallbackInfo& info) {
-    Napi::Buffer<byte> key = info[0].As<Napi::Buffer<byte>>();
-    Napi::Value value = info[1].As<Napi::Value>();
+    auto key = info[0].As<Napi::Buffer<byte>>();
+    auto value = info[1].As<Napi::Object>();
 
-    items.insert({ key, value });
+    map.insert({ key, Napi::Persistent(value) });
 
     return info.Env().Undefined();
 }
