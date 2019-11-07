@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const { Suite } = require('benchmark');
 const addon = require('bindings')('addon.node')
 
@@ -12,13 +13,13 @@ const map = new Map();
 
 suite.add('BufferMap', function() {
     for (let i = 0; i < MAX_KEYS; i++) {
-        const key = Buffer.from(String(i));
+        const key = crypto.randomBytes(8);
         bufferMap.set(key, {});
     }
   })
   .add('Map', function() {
     for (let i = 0; i < MAX_KEYS; i++) {
-        const key = Buffer.from(String(i));
+        const key = crypto.randomBytes(8);
         map.set(key.toString('hex'), {});
     }
   })

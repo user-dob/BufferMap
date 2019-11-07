@@ -36,8 +36,6 @@ Napi::Value BufferMap::Get(const Napi::CallbackInfo& info) {
     }
 
     return iterator->second.Value();
-
-    return info.Env().Undefined();
 }
 
 Napi::Value BufferMap::Set(const Napi::CallbackInfo& info) {
