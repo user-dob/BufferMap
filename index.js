@@ -2,13 +2,15 @@ const addon = require('bindings')('addon.node')
 
 const BufferMap = addon.BufferMap;
 
-const map = new BufferMap();
+const bufferMap = new BufferMap();
 
-const key = Buffer.from([1, 2, 3]);
-const key1 = Buffer.from([1, 2, 3]);
+for (let i = 0; i < 10; i++) {
+    const key = Buffer.from(String(i));
+    bufferMap.set(key, {'i': i});
+}
 
-map.set(key, {1: 1})
-map.set(Buffer.from([5]), {1: 100})
+const key = Buffer.from(String(5));
+console.log( bufferMap.get(key) );
 
-console.log( map.get(key1) )
-console.log( map.get(Buffer.from([5])) )
+bufferMap.set(Buffer.from([1,2,3,4,5,6,7]), {'i': 100});
+console.log( bufferMap.get(Buffer.from([1,2,3,4,5,6,7])) );
