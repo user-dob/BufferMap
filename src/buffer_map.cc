@@ -25,30 +25,28 @@ BufferMap::BufferMap(const Napi::CallbackInfo& info) : Napi::ObjectWrap<BufferMa
 }
 
 Napi::Value BufferMap::Get(const Napi::CallbackInfo& info) {
-    auto key = info[0].As<Napi::Buffer<char>>();
+    auto buffer = info[0].As<Napi::Buffer<char>>();
 
-    std::string str(key.Data(), 3);
+    std::string key(buffer.Data(), buffer.Length());
 
-    std::cout << "Get" << str << std::endl;
-
-    auto iterator = map.find(str);
+    auto iterator = map.find(key);
 
     if (iterator == map.end()) {
        return info.Env().Undefined();
     }
 
     return iterator->second.Value();
+
+    return info.Env().Undefined();
 }
 
 Napi::Value BufferMap::Set(const Napi::CallbackInfo& info) {
-    auto key = info[0].As<Napi::Buffer<char>>();
+    auto buffer = info[0].As<Napi::Buffer<char>>();
     auto value = info[1].As<Napi::Object>();
 
-    std::string str(key.Data(), 3);
+    std::string key(buffer.Data(), buffer.Length());
 
-    std::cout << "Set" << str << std::endl;
-
-    map.insert({ str, Napi::Persistent(value) });
+    map.insert({ key, Napi::Persistent(value) });
 
     return info.Env().Undefined();
 }
