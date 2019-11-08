@@ -4,7 +4,19 @@
 #include <napi.h>
 #include <unordered_map>
 
-typedef std::unordered_map<std::string, Napi::ObjectReference> Map;
+typedef u_int8_t byte;
+
+struct KeyHash {
+    std::size_t operator()(const std::array<byte, 8>& key) const {
+        return 10;
+    }
+};
+
+typedef std::unordered_map<
+    std::array<byte, 8>,
+    Napi::ObjectReference,
+    KeyHash
+> Map;
 
 class BufferMap : public Napi::ObjectWrap<BufferMap> {
     public:

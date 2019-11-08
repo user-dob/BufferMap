@@ -25,9 +25,11 @@ BufferMap::BufferMap(const Napi::CallbackInfo& info) : Napi::ObjectWrap<BufferMa
 }
 
 Napi::Value BufferMap::Get(const Napi::CallbackInfo& info) {
-    auto buffer = info[0].As<Napi::Buffer<char>>();
+    auto buffer = info[0].As<Napi::Buffer<byte>>();
 
-    std::string key(buffer.Data(), buffer.Length());
+    std::array<byte, 8> key;
+
+    std::memcpy(key.data(), buffer.Data(), 8);
 
     auto iterator = map.find(key);
 
@@ -39,10 +41,12 @@ Napi::Value BufferMap::Get(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value BufferMap::Set(const Napi::CallbackInfo& info) {
-    auto buffer = info[0].As<Napi::Buffer<char>>();
+    auto buffer = info[0].As<Napi::Buffer<byte>>();
     auto value = info[1].As<Napi::Object>();
 
-    std::string key(buffer.Data(), buffer.Length());
+    std::array<byte, 8> key;
+
+    std::memcpy(key.data(), buffer.Data(), 8);
 
     map.insert({ key, Napi::Persistent(value) });
 

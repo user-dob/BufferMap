@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const { toBigIntBE } = require('bigint-buffer');
 const { Suite } = require('benchmark');
 const addon = require('bindings')('addon.node')
 
@@ -7,20 +8,29 @@ const BufferMap = addon.BufferMap;
 const suite = new Suite();
 
 const MAX_KEYS = 1000;
+const BYTE_COUNT = 8;
 
 const bufferMap = new BufferMap();
-const map = new Map(); 
+const stringMap = new Map();
+const bigIntMap = new Map();
 
-suite.add('BufferMap', function() {
+suite
+  .add('BufferMap', function() {
     for (let i = 0; i < MAX_KEYS; i++) {
-        const key = crypto.randomBytes(8);
+        const key = crypto.randomBytes(BYTE_COUNT);
         bufferMap.set(key, {});
     }
   })
-  .add('Map', function() {
+  .add('StringMap', function() {
     for (let i = 0; i < MAX_KEYS; i++) {
-        const key = crypto.randomBytes(8);
-        map.set(key.toString('hex'), {});
+        const key = crypto.randomBytes(BYTE_COUNT);
+        stringMap.set(key.toString('hex'), {});
+    }
+  })
+  .add('BigIntMap', function() {
+    for (let i = 0; i < MAX_KEYS; i++) {
+        const key = crypto.randomBytes(BYTE_COUNT);
+        bigIntMap.set(toBigIntBE(key), {});
     }
   })
   // add listeners
