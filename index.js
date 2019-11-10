@@ -18,3 +18,7 @@ for (let i = 0; i < 10; i++) {
 const key = crypto.randomBytes(8);
 bufferMap.set(key, {'i': 'randomBytes'});
 console.log( bufferMap.get(key) );
+
+const key1 = crypto.randomBytes(8);
+bufferMap.set(key1, {'i': 'randomBytes1'});
+console.log( bufferMap.get(key1) );

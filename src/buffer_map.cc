@@ -1,5 +1,6 @@
 #include "buffer_map.h"
 #include <iostream>
+#include <array>
 
 Napi::FunctionReference BufferMap::constructor;
 

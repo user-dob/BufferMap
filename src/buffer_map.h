@@ -3,12 +3,19 @@
 
 #include <napi.h>
 #include <unordered_map>
+#include <array>
+#include <iostream>
 
-typedef u_int8_t byte;
+typedef unsigned char byte;
 
 struct KeyHash {
     std::size_t operator()(const std::array<byte, 8>& key) const {
-        return 10;
+        std::hash<byte> hasher;
+        size_t hash = 0;
+        for (const auto& item: key) {
+            hash = hash * 31 + hasher(item);
+        }
+        return hash;
     }
 };
 
